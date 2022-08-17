@@ -1,135 +1,119 @@
-window.human = false;
+window.addEventListener("resize", resizeCanvas, false);
+window.addEventListener("DOMContentLoaded", onLoad, false);
 
-var canvasEl = document.querySelector('.fireworks');
-var ctx = canvasEl.getContext('2d');
-var numberOfParticules = 30;
-var pointerX = 0;
-var pointerY = 0;
-var tap = ('ontouchstart' in window || navigator.msMaxTouchPoints) ? 'touchstart' : 'mousedown';
-var colors = ['#FF1461', '#18FF92', '#5A87FF', '#FBF38C'];
+window.requestAnimationFrame =
+    window.requestAnimationFrame       ||
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame    ||
+    window.oRequestAnimationFrame      ||
+    window.msRequestAnimationFrame     ||
+    function (callback) {
+        window.setTimeout(callback, 1000/60);
+    };
 
-function setCanvasSize() {
-    canvasEl.width = window.innerWidth * 2;
-    canvasEl.height = window.innerHeight * 2;
-    canvasEl.style.width = window.innerWidth + 'px';
-    canvasEl.style.height = window.innerHeight + 'px';
-    canvasEl.getContext('2d').scale(2, 2);
+var canvas, ctx, w, h, particles = [], probability = 0.04,
+    xPoint, yPoint;
+
+
+function onLoad() {
+    canvas = document.getElementById("canvas");
+    ctx = canvas.getContext("2d");
+    resizeCanvas();
+    window.requestAnimationFrame(updateWorld);
 }
 
-function updateCoords(e) {
-    pointerX = e.clientX || e.touches[0].clientX;
-    pointerY = e.clientY || e.touches[0].clientY;
-}
-
-function setParticuleDirection(p) {
-    var angle = anime.random(0, 360) * Math.PI / 180;
-    var value = anime.random(50, 180);
-    var radius = [-1, 1][anime.random(0, 1)] * value;
-    return {
-        x: p.x + radius * Math.cos(angle),
-        y: p.y + radius * Math.sin(angle)
+function resizeCanvas() {
+    if (!!canvas) {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
     }
 }
 
-function createParticule(x,y) {
-    var p = {};
-    p.x = x;
-    p.y = y;
-    p.color = colors[anime.random(0, colors.length - 1)];
-    p.radius = anime.random(16, 32);
-    p.endPos = setParticuleDirection(p);
-    p.draw = function() {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, 2 * Math.PI, true);
-        ctx.fillStyle = p.color;
-        ctx.fill();
-    }
-    return p;
+function updateWorld() {
+    update();
+    paint();
+    window.requestAnimationFrame(updateWorld);
 }
 
-function createCircle(x,y) {
-    var p = {};
-    p.x = x;
-    p.y = y;
-    p.color = '#FFF';
-    p.radius = 0.1;
-    p.alpha = .5;
-    p.lineWidth = 6;
-    p.draw = function() {
-        ctx.globalAlpha = p.alpha;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, 2 * Math.PI, true);
-        ctx.lineWidth = p.lineWidth;
-        ctx.strokeStyle = p.color;
-        ctx.stroke();
-        ctx.globalAlpha = 1;
+function update() {
+    if (particles.length < 500 && Math.random() < probability) {
+        createFirework();
     }
-    return p;
+    var alive = [];
+    for (var i=0; i<particles.length; i++) {
+        if (particles[i].move()) {
+            alive.push(particles[i]);
+        }
+    }
+    particles = alive;
 }
 
-function renderParticule(anim) {
-    for (var i = 0; i < anim.animatables.length; i++) {
-        anim.animatables[i].target.draw();
+function paint() {
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.fillStyle = "rgba(0,0,0,0.2)";
+    ctx.fillRect(0, 0, w, h);
+    ctx.globalCompositeOperation = 'lighter';
+    for (var i=0; i<particles.length; i++) {
+        particles[i].draw(ctx);
     }
 }
 
-function animateParticules(x, y) {
-    var circle = createCircle(x, y);
-    var particules = [];
-    for (var i = 0; i < numberOfParticules; i++) {
-        particules.push(createParticule(x, y));
+function createFirework() {
+    xPoint = Math.random()*(w-200)+100;
+    yPoint = Math.random()*(h-200)+100;
+    var nFire = Math.random()*50+100;
+    var c = "rgb("+(~~(Math.random()*200+55))+","
+        +(~~(Math.random()*200+55))+","+(~~(Math.random()*200+55))+")";
+    for (var i=0; i<nFire; i++) {
+        var particle = new Particle();
+        particle.color = c;
+        var vy = Math.sqrt(25-particle.vx*particle.vx);
+        if (Math.abs(particle.vy) > vy) {
+            particle.vy = particle.vy>0 ? vy: -vy;
+        }
+        particles.push(particle);
     }
-    anime.timeline().add({
-        targets: particules,
-        x: function(p) { return p.endPos.x; },
-        y: function(p) { return p.endPos.y; },
-        radius: 0.1,
-        duration: anime.random(1200, 1800),
-        easing: 'easeOutExpo',
-        update: renderParticule
-    })
-        .add({
-            targets: circle,
-            radius: anime.random(80, 160),
-            lineWidth: 0,
-            alpha: {
-                value: 0,
-                easing: 'linear',
-                duration: anime.random(600, 800),
-            },
-            duration: anime.random(1200, 1800),
-            easing: 'easeOutExpo',
-            update: renderParticule,
-            offset: 0
-        });
 }
 
-var render = anime({
-    duration: Infinity,
-    update: function() {
-        ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
-    }
-});
+function Particle() {
+    this.w = this.h = Math.random()*4+1;
 
-document.addEventListener(tap, function(e) {
-    window.human = true;
-    render.play();
-    updateCoords(e);
-    animateParticules(pointerX, pointerY);
-}, false);
+    this.x = xPoint-this.w/2;
+    this.y = yPoint-this.h/2;
 
-var centerX = window.innerWidth / 2;
-var centerY = window.innerHeight / 2;
+    this.vx = (Math.random()-0.5)*10;
+    this.vy = (Math.random()-0.5)*10;
 
-function autoClick() {
-    if (window.human) return;
-    animateParticules(
-        anime.random(centerX-50, centerX+50),
-        anime.random(centerY-50, centerY+50)
-    );
-    anime({duration: 200}).finished.then(autoClick);
+    this.alpha = Math.random()*.5+.5;
+
+    this.color;
 }
 
-autoClick();
-setCanvasSize();
-window.addEventListener('resize', setCanvasSize, false);
+Particle.prototype = {
+    gravity: 0.05,
+    move: function () {
+        this.x += this.vx;
+        this.vy += this.gravity;
+        this.y += this.vy;
+        this.alpha -= 0.01;
+        if (this.x <= -this.w || this.x >= screen.width ||
+            this.y >= screen.height ||
+            this.alpha <= 0) {
+            return false;
+        }
+        return true;
+    },
+    draw: function (c) {
+        c.save();
+        c.beginPath();
+
+        c.translate(this.x+this.w/2, this.y+this.h/2);
+        c.arc(0, 0, this.w, 0, Math.PI*2);
+        c.fillStyle = this.color;
+        c.globalAlpha = this.alpha;
+
+        c.closePath();
+        c.fill();
+        c.restore();
+    }
+}

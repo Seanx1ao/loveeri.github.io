@@ -34,26 +34,16 @@
 	<link rel="shortcut icon" href="favicon.png" >
 
 </head>
-
 <body>
-
    <!-- Header
+
    ================================================== -->
    <header id="home">
-
       <nav id="nav-wrap">
 
          <a class="mobile-btn" href="#nav-wrap" title="Show navigation">Show navigation</a>
 	      <a class="mobile-btn" href="#" title="Hide navigation">Hide navigation</a>
 
-<!--         <ul id="nav" class="nav">-->
-<!--            <li class="current"><a class="smoothscroll" href="#home">Home</a></li>-->
-<!--            <li><a class="smoothscroll" href="#about">About</a></li>-->
-<!--	         <li><a class="smoothscroll" href="#resume">Resume</a></li>-->
-<!--            <li><a class="smoothscroll" href="#portfolio">Works</a></li>-->
-<!--&lt;!&ndash;            <li><a class="smoothscroll" href="#testimonials">Testimonials</a></li>&ndash;&gt;-->
-<!--&lt;!&ndash;            <li><a class="smoothscroll" href="#contact">Contact</a></li>&ndash;&gt;-->
-<!--         </ul> &lt;!&ndash; end #nav &ndash;&gt;-->
 
       </nav> <!-- end #nav-wrap -->
 
@@ -63,8 +53,6 @@
             <hr/>
              <h3 style="color: whitesmoke">对不起，我是<span><</span><span id="typed"></span><span>></span></h3>
       </div>
-
-
       <p class="scrolldown">
          <a class="smoothscroll" href="#about"><i class="icon-down-circle"></i></a>
       </p>
@@ -72,9 +60,10 @@
    </header> <!-- Header End -->
    <!-- About Section
    ================================================== -->
+   <div>
+      <canvas id="canvas"></canvas>
+   </div>
    <section id="about">
-      <canvas class="fireworks"></canvas>
-
       <div class="row">
          <div class="three columns">
             <img class="profile-pic"  src="images/profilepic.jpg" alt="" />
@@ -86,9 +75,11 @@
                <h1 style="color: whitesmoke">但我也是<span id="typed1"></span></h1>
                <br>
                <br>
-               <h3 style="color: whitesmoke">请你消消气, 当你需要我的时候, 可能我会很笨拙, 会无意伤害到你, 但这不是我本意, 我也会一直在等你.</h3>
+               <h3 style="color: whitesmoke">请你消消气, 当你需要我的时候, 可能我会很笨拙,</h3>
+               <h3 style="color: whitesmoke">会无意伤害到你, 但这不是我本意, 我也会一直在等你.</h3>
             </div>
          </div>
+
       </div>
 
       <br>
@@ -103,23 +94,22 @@
       <br>
 
    </section> <!-- About Section End-->
-
    <!-- Java Script
    ================================================== -->
    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
    <script>window.jQuery || document.write('<script src="js/jquery-1.10.2.min.js"><\/script>')</script>
    <script type="text/javascript" src="js/jquery-migrate-1.2.1.min.js"></script>
 
+   <script src="js/firework.js"></script>
    <script src="js/jquery.flexslider.js"></script>
    <script src="js/waypoints.js"></script>
    <script src="js/jquery.fittext.js"></script>
    <script src="js/magnific-popup.js"></script>
    <script src="js/init.js"></script>
-   <script src="js/firework.js"></script>
 
    <script>
        var typed = new Typed("#typed", {
-           strings: ['大笨猪', '大坏蛋', '没脑子的蠢货', '惹你不开心的罪魁祸首'],
+           strings: ['大笨猪', '大坏蛋', '不会读空气的人', '惹你不开心的罪魁祸首'],
            typeSpeed: 60,
            backSpeed: 60,
            backDelay: 2500,
