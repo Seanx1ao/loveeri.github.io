@@ -187,10 +187,12 @@ ul#nav li.current a { color: #F06000; }
 /* ------------------------------------------------------------------ */
 
 #about {
-   background: #2D2E34;
-   padding-top: 96px;
-   padding-bottom: 66px;
-   overflow: hidden;
+    background-image: url(../images/second_page.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding-top: 96px;
+    padding-bottom: 66px;
+    overflow: hidden;
 }
 
 #about a, #about a:visited  { color: #fff; }

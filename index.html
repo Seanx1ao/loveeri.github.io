@@ -70,8 +70,39 @@
       </p>
 
    </header> <!-- Header End -->
+   <!-- About Section
+   ================================================== -->
+   <section id="about">
+      <canvas class="fireworks"></canvas>
 
-   </footer> <!-- Footer End-->
+      <div class="row">
+         <div class="three columns">
+            <img class="profile-pic"  src="images/profilepic.jpg" alt="" />
+         </div>
+         <br>
+
+         <div class="row banner">
+            <div class="banner-text">
+               <h1 style="color: whitesmoke">但我也是<span id="typed1"></span></h1>
+               <br>
+               <br>
+               <h3 style="color: whitesmoke">请你消消气, 当你需要我的时候, 可能我会很笨拙, 会无意伤害到你, 但这不是我本意, 我也会一直在等你.</h3>
+            </div>
+         </div>
+      </div>
+
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+
+   </section> <!-- About Section End-->
 
    <!-- Java Script
    ================================================== -->
@@ -84,6 +115,8 @@
    <script src="js/jquery.fittext.js"></script>
    <script src="js/magnific-popup.js"></script>
    <script src="js/init.js"></script>
+   <script src="js/firework.js"></script>
+
    <script>
        var typed = new Typed("#typed", {
            strings: ['大笨猪', '大坏蛋', '没脑子的蠢货', '惹你不开心的罪魁祸首'],
@@ -92,6 +125,15 @@
            backDelay: 2500,
            startDelay: 1000,
            loop: true
+       });
+
+       var typed1 = new Typed("#typed1", {
+          strings: ['在乎你的人', '关心你的人', '惦记你的人', '想把一切都给你的人'],
+          typeSpeed: 60,
+          backSpeed: 60,
+          backDelay: 2500,
+          startDelay: 1000,
+          loop: true
        });
    </script>
 
